@@ -1,5 +1,5 @@
 // Mock data
-interface DrainagePoint {
+export interface DrainagePoint {
 	id: string;
 	name: string;
 	lat: number;
@@ -12,7 +12,7 @@ interface DrainagePoint {
 	distance: number;
 }
 
-interface Notification {
+export interface Notification {
 	id: string;
 	location: string;
 	distance: number;
@@ -21,7 +21,7 @@ interface Notification {
 	time: string;
 }
 
-interface WasteItem {
+export interface WasteItem {
 	type: string;
 	pricePerKg: number;
 	description: string;
