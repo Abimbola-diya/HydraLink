@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 import { Droplets } from "lucide-react";
 
 export default function LoginPage() {
+	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 
@@ -16,12 +16,33 @@ export default function LoginPage() {
 		e.preventDefault();
 		setIsLoading(true);
 
-		// Simulate login - replace with actual auth logic
-		setTimeout(() => {
-			// Store auth token in localStorage/cookies
-			localStorage.setItem("isAuthenticated", "true");
-			router.push("/dashboard");
-		}, 1000);
+		try {
+			const response = await fetch("https://hydralink.onrender.com/auth/login", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					username,
+					email,
+				}),
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				localStorage.setItem("isAuthenticated", "true");
+				localStorage.setItem("username", data.username);
+				localStorage.setItem("email", data.email);
+				router.push("/dashboard");
+			} else {
+				alert("Login failed. Please check your credentials.");
+			}
+		} catch (error) {
+			alert("Network error. Please try again.");
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -39,6 +60,20 @@ export default function LoginPage() {
 					<form onSubmit={handleLogin} className="space-y-4">
 						<div>
 							<label className="block text-sm font-medium text-slate-300 mb-2">
+								Username
+							</label>
+							<input
+								type="text"
+								value={username}
+								onChange={(e) => setUsername(e.target.value)}
+								className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								placeholder="username"
+								required
+							/>
+						</div>
+
+						<div>
+							<label className="block text-sm font-medium text-slate-300 mb-2">
 								Email
 							</label>
 							<input
@@ -51,19 +86,7 @@ export default function LoginPage() {
 							/>
 						</div>
 
-						<div>
-							<label className="block text-sm font-medium text-slate-300 mb-2">
-								Password
-							</label>
-							<input
-								type="password"
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-								className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-								placeholder="••••••••"
-								required
-							/>
-						</div>
+
 
 						<button
 							type="submit"
