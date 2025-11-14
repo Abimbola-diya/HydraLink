@@ -10,3 +10,4 @@ google-genai
 python-dotenv
 email-validator
 apscheduler
+starlette
