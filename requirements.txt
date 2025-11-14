@@ -8,3 +8,4 @@ psycopg2-binary
 Pillow
 google-genai
 python-dotenv
+email-validator
